@@ -11,7 +11,7 @@ index <- 1
 conComment <- ""
 conPost <- "" 
 conTest <- ""
-alternativeCode <<- 1
+alternativeCode <<- 0
 
 #########################################################################################
 ############  MENTION THE DATABASE AND THE COLLECTIONS CREATED FOR STORAGE  #############
@@ -38,7 +38,7 @@ json <- fromJSON(url_start)
 edge_hashtag_to_media <- json$graphql$hashtag$edge_hashtag_to_media
 posts <- edge_hashtag_to_media$edges$node
 totalPostCount <- json[["graphql"]][["hashtag"]][["edge_hashtag_to_media"]][["count"]]
-
+end_cursor <-  ""
 #Start crawling
 print(paste("Hashtag:", hashtag))
 print(paste("TotalPosts:", totalPostCount))
@@ -82,6 +82,11 @@ databaseConnections <- function(){
 # extract the latest cursor from the cursor data collection, start crawling.
 #############################################################
 
+reset <- function(err){
+  print(err)
+  #latest_end_cursor()
+}
+
 latest_end_cursor <- function(){
   print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
   print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
@@ -93,14 +98,16 @@ latest_end_cursor <- function(){
   print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
   print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
   databaseConnections()
+  
   end_cursor_lastest <- conTest$find(query = '{"Type":"EC"}',sort = '{"_id":-1}',limit = 1)
   if(nrow(end_cursor_lastest) > 0){
-    end_cursor <- end_cursor_lastest$End_Cursor
+    end_cursor <<- end_cursor_lastest$End_Cursor
   }
   else{
-    end_cursor <- edge_hashtag_to_media$page_info$end_cursor
+    end_cursor <<- edge_hashtag_to_media$page_info$end_cursor
   }
-  tryCatch(extractInfo(index,conTest,conPost,conComment), error = function(err){ latest_end_cursor()} )
+  print(end_cursor)
+  tryCatch(extractInfo(index,conTest,conPost,conComment), error = function(err){ reset(err = err )} )
 }
 
 latest_end_cursor()

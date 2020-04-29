@@ -37,7 +37,7 @@ extractInfo <- function(index,conTest,conPost,conComment) {
           
           print(paste("Hashtag:", hashtag))
           print(paste("TotalPosts:", totalPostCount))
-          extractInfo(index)
+          extractInfo(index,conTest,conPost,conComment)
           
         } else {
           print("all hashtags scanned")
@@ -229,7 +229,7 @@ getNewPosts <- function(index){
   #   createNewDatasetFromExistingCrawler()
   # }
   # else{
-    extractInfo(index)
+    extractInfo(index,conTest,conPost,conComment)
   # }
 }
 
@@ -265,7 +265,7 @@ createNewDatasetFromExistingCrawler <- function(){
   #Start crawling
   print(paste("Hashtag:", hashtag))
   print(paste("TotalPosts:", totalPostCount))
-  extractInfo(index)
+  extractInfo(index,conTest,conPost,conComment)
 }
 
 createDirectory <- function() {
