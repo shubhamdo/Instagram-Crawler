@@ -1,14 +1,14 @@
 #Functions
-con <- mongo(
-  collection = "test",
-  db = "admin",
-  url = "mongodb://localhost",
-  verbose = FALSE,
-  options = ssl_options()
-)
+# con <- mongo(
+#   collection = "test",
+#   db = "admin",
+#   url = "mongodb://localhost",
+#   verbose = FALSE,
+#   options = ssl_options()
+# )
 
 
-extractInfo <- function(index) {
+extractInfo <- function(index,conTest,conPost,conComment) {
 
   print(paste("extractInfo function called for hashtag", hashtag))
   maxrows <- nrow(posts)
@@ -108,14 +108,28 @@ extractInfo <- function(index) {
                                      "Post_Comments_Disabled")
         
         #write_csv(postDataFrame, paste(saveDirectory, hashtag, ".csv", sep = ""))
-        con$insert(postDataFrame)
+        
         # l <- postDataFrame$Post_URL[1]
         # print(paste("URL IS: ",postDataFrame$Post_URL[1]))
         # print(typeof(str(postDataFrame$Post_URL)))
         url <- levels(postDataFrame$Post_URL)
         #print(url)
-        extractPostCommentData(url)
-        Sys.sleep(0.15)
+        quer = paste('{"post_url":"',url,'"}',sep = "")
+        countPost <- conTest$count(query = quer)
+        if(countPost > 0){
+          print("Post Data Already Exisits")
+        }else{
+          if(alternativeCode == 1){
+            conTest$insert(postDataFrame)
+            #Sys.sleep(0.15)
+          }else{
+            extractPostCommentData(url,conPost,conComment)
+            conTest$insert(postDataFrame)
+            #Sys.sleep(0.15)            
+          }
+          
+
+        }
         
       } else {       
         colnames(postDataFrame) <- c("ID", 
@@ -133,7 +147,7 @@ extractInfo <- function(index) {
                                      "Post_Dimenisons_Width",
                                      "Post_Comments_Disabled")
         #write_csv(postDataFrame, paste(saveDirectory, hashtag, ".csv", sep = ""), append = TRUE)
-        con$insert(postDataFrame)
+        
         # print(paste("URL IS: ",str(postDataFrame$Post_URL[1])))
         # print(typeof(str(postDataFrame$Post_URL)))
         #as <<- postDataFrame$Post_URL
@@ -141,12 +155,22 @@ extractInfo <- function(index) {
         #print(url)
         
         quer = paste('{"post_url":"',url,'"}',sep = "")
-        countPost <- con$count(query = quer)
+        countPost <- conTest$count(query = quer)
         if(countPost > 0){
           print("Post Data Already Exisits")
+          print("Post Data Already Exisits")
+          print("Post Data Already Exisits")
+          print("Post Data Already Exisits")
+          print("Post Data Already Exisits")
         }else{
-          extractPostCommentData(url)
-          Sys.sleep(0.15)
+          if(alternativeCode == 1){
+            conTest$insert(postDataFrame)
+            Sys.sleep(0.15)
+          }else{
+            extractPostCommentData(url,conPost,conComment)
+            conTest$insert(postDataFrame)
+            Sys.sleep(0.15)            
+          }
         }
         
       }
@@ -177,8 +201,12 @@ getNewPosts <- function(index){
   colnames(end_cursor.df) <- c("Type", 
                                "Date", 
                                "End_Cursor")
-  con$insert(end_cursor.df)
+  conTest$insert(end_cursor.df)
   print(paste("Current Cursor:",end_cursor))
+  
+  
+  
+  
   
   #Just in case that something went horrible wrong and my end_cursor is lost. For resume scanning
   end_cursor_for_resume_scan <<- as.data.frame(edge_hashtag_to_media$page_info$end_cursor)
@@ -193,16 +221,16 @@ getNewPosts <- function(index){
   print(paste(index, "posts crawled"))
   print(paste(totalPostCount - index, "posts left"))
   Sys.sleep(sysSleepTimer)
-  if(index > 10000)
-  {
-    end.time <- Sys.time()
-    time.taken <- end.time - start.time
-    print(paste("RunTime: ",index,"Records Loaded in",time.taken,"Seconds"))
-    createNewDatasetFromExistingCrawler()
-  }
-  else{
+  # if(index > 10000)
+  # {
+  #   end.time <- Sys.time()
+  #   time.taken <- end.time - start.time
+  #   print(paste("RunTime: ",index,"Records Loaded in",time.taken,"Seconds"))
+  #   createNewDatasetFromExistingCrawler()
+  # }
+  # else{
     extractInfo(index)
-  }
+  # }
 }
 
 createNewDatasetFromExistingCrawler <- function(){

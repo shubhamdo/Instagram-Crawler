@@ -30,26 +30,26 @@ library(xml2)
 
 #postURLs <- postURL$Post_URL
 
-extractPostCommentData <- function(url){
+extractPostCommentData <- function(url,conPost,conComment){
   #s <- toString(postURLs[i,"Post_URL"])
   
   #print(s)
   #print(paste(s,i))
   #Sys.sleep(0.5)
-  con <- mongo(
-    collection = "post",
-    db = "admin",
-    url = "mongodb://localhost",
-    verbose = FALSE,
-    options = ssl_options()
-  )
+  # con <- mongo(
+  #   collection = "post",
+  #   db = "admin",
+  #   url = "mongodb://localhost",
+  #   verbose = FALSE,
+  #   options = ssl_options()
+  # )
     s <- toString(url)
     url_start <- paste(s,"/?__a=1",sep = "")
     err <- tryCatch(post <<- fromJSON(url_start), error = function(e) NA)
     if(is.na(err)){
       write_csv(data.frame(url_start), "output/failedURLs_1.csv", append = TRUE)
     }else{
-      getPostData(con,url)
+      getPostData(conPost,conComment,url)
     } 
   
 }
@@ -60,7 +60,7 @@ extractPostCommentData <- function(url){
 #has_next_page <<- post[["graphql"]][["shortcode_media"]][["edge_media_to_parent_comment"]][["page_info"]][["has_next_page"]]
 #end_cursor <<- post[["graphql"]][["shortcode_media"]][["edge_media_to_parent_comment"]][["page_info"]][["end_cursor"]]
 
-getPostData <- function(con,url) {
+getPostData <- function(conPost,conComment,url) {
   ####################### POSTDATA - NEED JUST ONCE #######################
   
   #PostData
@@ -143,15 +143,15 @@ getPostData <- function(con,url) {
   )
   
   #write_csv(postDataFrame, "output/postExportTest.csv",append = TRUE)
-  con$insert(postDataFrame)
+  conPost$insert(postDataFrame)
   
-  conComment <- mongo(
-    collection = "comment",
-    db = "admin",
-    url = "mongodb://localhost",
-    verbose = FALSE,
-    options = ssl_options()
-  )
+  # conComment <- mongo(
+  #   collection = "comment",
+  #   db = "admin",
+  #   url = "mongodb://localhost",
+  #   verbose = FALSE,
+  #   options = ssl_options()
+  # )
   
   extractComments(conComment,url)
   
