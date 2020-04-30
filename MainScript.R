@@ -84,7 +84,8 @@ databaseConnections <- function(){
 
 reset <- function(err){
   print(err)
-  #latest_end_cursor()
+  Sys.sleep(300)
+  latest_end_cursor()
 }
 
 latest_end_cursor <- function(){

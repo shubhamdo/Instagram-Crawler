@@ -50,6 +50,8 @@ databaseConnections <- function(){
 databaseConnections()
 cursorDocuments <- conTest$find(query = "{}")
 postDocuments <- as.vector(conPost$find(query = "{}", fields = '{"post_url": 1, "_id":0}'))
+postDocumentsCount <- unique(postDocuments)
+
 postCount <- conTest$find(query = "{}")
 
 postCount1 <- unique(postCount$Post_URL) 
