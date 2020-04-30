@@ -49,8 +49,22 @@ databaseConnections <- function(){
 }
 databaseConnections()
 cursorDocuments <- conTest$find(query = "{}")
-postDocuments <- as.vector(conPost$find(query = "{}", fields = '{"post_url": 1, "_id":0}'))
+postDocuments <- as.vector(conComment$find(query = "{}", fields = '{"post_url": 1, "_id":0}'))
 postDocumentsCount <- unique(postDocuments)
+
+
+
+# Check for duplications in the mongo db collections 
+testDocuments <- conTest$find(query = "{}")
+testDocumentsCount <- unique(testDocuments)
+
+postDocuments <- conPost$find(query = "{}", fields = '{"post_url": 1, "_id":0}')
+postDocumentsCount <- unique(postDocuments)
+
+commentDocuments <- conComment$find(query = "{}")
+commentDocumentsCount <- unique(commentDocuments)
+
+
 
 postCount <- conTest$find(query = "{}")
 
