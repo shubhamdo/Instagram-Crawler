@@ -99,7 +99,7 @@ latest_end_cursor <- function(){
   print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
   print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
   databaseConnections()
-  
+  #
   end_cursor_lastest <- conTest$find(query = '{"Type":"EC"}',sort = '{"_id":-1}',limit = 1)
   if(nrow(end_cursor_lastest) > 0){
     end_cursor <<- end_cursor_lastest$End_Cursor

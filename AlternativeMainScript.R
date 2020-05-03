@@ -3,7 +3,7 @@ setwd("E:/Instagram-Crawler")
 source("packages.R")
 source("CommentExtraction.R")
 source("URLExtractor.R")
-
+#
 #Set (initial) parameters
 hashtagCounter <- 1
 sysSleepTimer <- 5

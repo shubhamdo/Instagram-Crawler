@@ -6,7 +6,7 @@
 #   verbose = FALSE,
 #   options = ssl_options()
 # )
-
+######
 
 extractInfo <- function(index,conTest,conPost,conComment) {
 

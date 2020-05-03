@@ -3,7 +3,7 @@
 # library(xml2)
 # library(foreach)
 # library(doParallel)
-
+#
 # cl <- makeCluster(2)
 # registerDoParallel(cl)
 # 
