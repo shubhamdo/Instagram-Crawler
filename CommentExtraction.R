@@ -32,7 +32,7 @@ library(xml2)
 
 extractPostCommentData <- function(url,conPost,conComment){
   #s <- toString(postURLs[i,"Post_URL"])
-  
+  print("Inside extract post")
   #print(s)
   #print(paste(s,i))
   #Sys.sleep(0.5)
@@ -44,10 +44,16 @@ extractPostCommentData <- function(url,conPost,conComment){
   #   options = ssl_options()
   # )
     s <- toString(url)
+    #s <-  "http://instagram.com/p/B_qZafWDDOw"
+    print(s)
     url_start <- paste(s,"/?__a=1",sep = "")
-    err <- tryCatch(post <<- fromJSON(url_start), error = function(e) NA)
+    url_start
+    err <- tryCatch(post <<- fromJSON(url_start), error = function(e) print(paste("Failing",e)))
+    #err <- tryCatch(post <<- fromJSON(url_start), error = function(e) NA)
     if(is.na(err)){
       write_csv(data.frame(url_start), "output/failedURLs_1.csv", append = TRUE)
+      
+      
     }else{
       getPostData(conPost,conComment,url)
     } 
@@ -62,7 +68,7 @@ extractPostCommentData <- function(url,conPost,conComment){
 
 getPostData <- function(conPost,conComment,url) {
   ####################### POSTDATA - NEED JUST ONCE #######################
-  
+  print("Inside GetPost")
   #PostData
   post_Id <- post[["graphql"]][["shortcode_media"]][["id"]]
   
@@ -101,7 +107,7 @@ getPostData <- function(conPost,conComment,url) {
   owner_profile_pic_url <- post[["graphql"]][["shortcode_media"]][["owner"]][["profile_pic_url"]]
   owner_username <- post[["graphql"]][["shortcode_media"]][["owner"]][["username"]]
   owner_full_name <- post[["graphql"]][["shortcode_media"]][["owner"]][["full_name"]]
-  post_url <- url
+  post_url <- toString(url)
   
   postDataFrame <- do.call(rbind.data.frame, Map(
     'c',
@@ -123,6 +129,60 @@ getPostData <- function(conPost,conComment,url) {
     owner_full_name
   ))
   
+  
+  # post_Id
+  # post_Caption
+  # post_Time_Posted
+  # post_Like_Count
+  # post_Comment_Count
+  # post_is_video
+  # post_video_view_count
+  # post_video_duration
+  # post_is_ad
+  # post_location
+  # post_url
+  # owner_id
+  # owner_is_verified
+  # owner_profile_pic_url
+  # owner_username
+  # owner_full_name
+  #
+  #
+  # typeof(post_Id               )
+  # typeof(post_Caption          )
+  # typeof(post_Time_Posted      )
+  # typeof(post_Like_Count       )
+  # typeof(post_Comment_Count    )
+  # typeof(post_is_video         )
+  # typeof(post_video_view_count )
+  # typeof(post_video_duration   )
+  # typeof(post_is_ad            )
+  # typeof(post_location         )
+  # typeof(post_url              )
+  # typeof(owner_id              )
+  # typeof(owner_is_verified     )
+  # typeof(owner_profile_pic_url )
+  # typeof(owner_username        )
+  # typeof(owner_full_name       )
+  #
+  # class(post_Id               )
+  # class(post_Caption          )
+  # class(post_Time_Posted      )
+  # class(post_Like_Count       )
+  # class(post_Comment_Count    )
+  # class(post_is_video         )
+  # class(post_video_view_count )
+  # class(post_video_duration   )
+  # class(post_is_ad            )
+  # class(post_location         )
+  # class(post_url              )
+  # class(owner_id              )
+  # class(owner_is_verified     )
+  # class(owner_profile_pic_url )
+  # class(owner_username        )
+  # class(owner_full_name       )
+  
+  
   colnames(postDataFrame) <- c(
     "post_Id",
     "post_Caption",
@@ -143,6 +203,8 @@ getPostData <- function(conPost,conComment,url) {
   )
   
   #write_csv(postDataFrame, "output/postExportTest.csv",append = TRUE)
+  print("Inside Post")
+  #print("Inside Post", postDataFrame)
   conPost$insert(postDataFrame)
   
   # conComment <- mongo(

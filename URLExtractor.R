@@ -112,21 +112,21 @@ extractInfo <- function(index,conTest,conPost,conComment) {
         # l <- postDataFrame$Post_URL[1]
         # print(paste("URL IS: ",postDataFrame$Post_URL[1]))
         # print(typeof(str(postDataFrame$Post_URL)))
-        url <- levels(postDataFrame$Post_URL)
+        url <- postDataFrame$Post_URL
         #print(url)
         quer = paste('{"post_url":"',url,'"}',sep = "")
         countPost <- conTest$count(query = quer)
         if(countPost > 0){
           print("Post Data Already Exisits")
         }else{
-          if(alternativeCode == 1){
-            conTest$insert(postDataFrame)
-            #Sys.sleep(0.15)
-          }else{
+          # if(alternativeCode == 1){
+          #   conTest$insert(postDataFrame)
+          #   #Sys.sleep(0.15)
+          # }else{
             extractPostCommentData(url,conPost,conComment)
             conTest$insert(postDataFrame)
             #Sys.sleep(0.15)            
-          }
+          # }
           
 
         }
@@ -151,7 +151,7 @@ extractInfo <- function(index,conTest,conPost,conComment) {
         # print(paste("URL IS: ",str(postDataFrame$Post_URL[1])))
         # print(typeof(str(postDataFrame$Post_URL)))
         #as <<- postDataFrame$Post_URL
-        url <- levels(postDataFrame$Post_URL)
+        url <- postDataFrame$Post_URL
         #print(url)
         
         quer = paste('{"post_url":"',url,'"}',sep = "")
@@ -163,14 +163,14 @@ extractInfo <- function(index,conTest,conPost,conComment) {
           print("Post Data Already Exisits")
           print("Post Data Already Exisits")
         }else{
-          if(alternativeCode == 1){
-            conTest$insert(postDataFrame)
-            Sys.sleep(0.15)
-          }else{
+          # if(alternativeCode == 1){
+          #   conTest$insert(postDataFrame)
+          #   Sys.sleep(0.15)
+          # }else{
             extractPostCommentData(url,conPost,conComment)
             conTest$insert(postDataFrame)
-            Sys.sleep(0.15)            
-          }
+          #   Sys.sleep(0.15)            
+          # }
         }
         
       }
